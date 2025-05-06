@@ -1,3 +1,4 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import { ThemeProvider } from "./components/ui/theme-provider"
 import { Toaster } from "./components/ui/toaster"
@@ -17,28 +18,36 @@ import { TeamPage } from "./pages/TeamPage"
 function App() {
   return (
     <AuthProvider>
-        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-          <Router>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-                <Route index element={<AccountPage />} />
-                <Route path="subscription" element={<SubscriptionPage />} />
-                <Route path="payments" element={<PaymentsPage />} />
-                <Route path="domains" element={<DomainsPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="projects">
-                  <Route index element={<Navigate to="/projects/drafts" replace />} />
-                  <Route path="drafts" element={<ProjectsPage type="drafts" />} />
-                  <Route path="deployed" element={<ProjectsPage type="deployed" />} />
-                </Route>
-                <Route path="team" element={<TeamPage />} />
+      {/* Default to dark mode here */}
+      <ThemeProvider defaultTheme="dark" storageKey="ui-theme">
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AccountPage />} />
+              <Route path="subscription" element={<SubscriptionPage />} />
+              <Route path="payments" element={<PaymentsPage />} />
+              <Route path="domains" element={<DomainsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="projects">
+                <Route index element={<Navigate to="/projects/drafts" replace />} />
+                <Route path="drafts" element={<ProjectsPage type="drafts" />} />
+                <Route path="deployed" element={<ProjectsPage type="deployed" />} />
               </Route>
-            </Routes>
-          </Router>
-          <Toaster />
-        </ThemeProvider>
+              <Route path="team" element={<TeamPage />} />
+            </Route>
+          </Routes>
+        </Router>
+        <Toaster />
+      </ThemeProvider>
     </AuthProvider>
   )
 }

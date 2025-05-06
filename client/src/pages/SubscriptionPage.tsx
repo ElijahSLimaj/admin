@@ -32,7 +32,7 @@ export function SubscriptionPage() {
   // Add state for confirmation dialog
   const [confirmPlanChangeOpen, setConfirmPlanChangeOpen] = useState(false);
   const [planToChange, setPlanToChange] = useState<any>(null);
-  
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -219,7 +219,12 @@ export function SubscriptionPage() {
                 Top Up
               </Button>
             </div>
-            <Progress value={subscription.tokens > 0 ? 50 : 0} className="h-2" />
+            <Progress
+              value={(subscription.tokens / 600000) * 100}
+              className="h-2"
+              trackClassName="bg-[rgba(243,66,34,0.2)]"
+              indicatorClassName="bg-[#F34222]"
+            />
             <p className="text-xs text-muted-foreground text-right">
               {subscription.tokens} / 600,000 tokens
             </p>
@@ -250,7 +255,7 @@ export function SubscriptionPage() {
                 const isCurrentPlan = plan.name.toLowerCase() === subscription.plan.toLowerCase();
                 const isEnterprisePlan = plan.isEnterprise;
                 const isFreePlan = plan.price === 0;
-                const buttonLabel = isCurrentPlan 
+                const buttonLabel = isCurrentPlan
                   ? "Current Plan"
                   : isFreePlan && subscription.amount > 0
                     ? "Downgrade to Free"
@@ -259,11 +264,10 @@ export function SubscriptionPage() {
                 return (
                   <div
                     key={plan.id}
-                    className={`rounded-lg border p-4 flex flex-col h-full ${
-                      selectedPlan === plan.id
+                    className={`rounded-lg border p-4 flex flex-col h-full ${selectedPlan === plan.id
                         ? "border-primary bg-primary/5"
                         : "border-border"
-                    } ${isEnterprisePlan ? "border-dashed" : ""}`}
+                      } ${isEnterprisePlan ? "border-dashed" : ""}`}
                     onClick={() => !isEnterprisePlan && setSelectedPlan(plan.id)}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -380,11 +384,10 @@ export function SubscriptionPage() {
               {topUpPackages.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className={`rounded-lg border p-4 cursor-pointer transition-colors hover:border-primary ${
-                    selectedTopUp === pkg.id
+                  className={`rounded-lg border p-4 cursor-pointer transition-colors hover:border-primary ${selectedTopUp === pkg.id
                       ? "border-primary bg-primary/5"
                       : "border-border"
-                  }`}
+                    }`}
                   onClick={() => setSelectedTopUp(pkg.id)}
                 >
                   <div className="text-center">

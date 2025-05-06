@@ -71,7 +71,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
 
 export function Sidebar({ className, open, onOpenChange, ...props }: SidebarProps) {
   const { isOpen, isMobile, setIsOpen } = useSidebar()
-  
+
   // Sync the controlled state with context if provided
   React.useEffect(() => {
     if (open !== undefined && open !== isOpen) {
@@ -199,14 +199,15 @@ export function SidebarMenuButton({
       className={cn(
         "relative group flex items-center rounded-md p-2 w-full transition-colors",
         isActive
-          ? "bg-accent text-accent-foreground font-medium"
-          : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground",
+          ? "bg-primary text-primary-foreground font-medium"
+          : "text-muted-foreground hover:bg-primary/10 hover:text-primary-foreground",
         className
       )}
       {...props}
     />
   )
 }
+
 
 interface SidebarMenuBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   className?: string
@@ -271,14 +272,15 @@ export function SidebarMenuSubButton({
       className={cn(
         "relative group flex items-center rounded-md p-1.5 text-sm w-full transition-colors",
         isActive
-          ? "bg-accent text-accent-foreground font-medium"
-          : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground",
+          ? "bg-primary text-primary-foreground font-medium"
+          : "text-muted-foreground hover:bg-primary/10 hover:text-primary-foreground",
         className
       )}
       {...props}
     />
   )
 }
+
 
 interface SidebarInsetProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string
