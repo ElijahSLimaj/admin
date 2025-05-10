@@ -13,6 +13,7 @@ import { getUserProjects, deleteProjects, renameProject, getProjectAccess, updat
 import { searchUsers } from "@/api/team";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { EmptyStateCard } from "@/components/ui/empty-state-card";
 
 interface ProjectsPageProps {
   type?: 'drafts' | 'deployed';
@@ -344,19 +345,14 @@ export function ProjectsPage({ type = 'drafts' }: ProjectsPageProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects.length === 0 ? (
-          <Card className="col-span-full">
-            <CardContent className="flex flex-col items-center justify-center py-10">
-              <FilePlus className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">No projects yet</h3>
-              <p className="text-muted-foreground text-center mt-2 mb-4">
-                Create your first project to get started.
-              </p>
-              <Button onClick={handleNewProject}>
-                <FilePlus className="mr-2 h-4 w-4" />
-                Create Project
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="col-span-full flex justify-left">
+          <EmptyStateCard
+            title="No projects yet"
+            description="Create your first project to get started."
+            buttonText="Create Project"
+            onButtonClick={handleNewProject}
+          />
+        </div>
         ) : (
           <>
             {projects.map((project) => (
