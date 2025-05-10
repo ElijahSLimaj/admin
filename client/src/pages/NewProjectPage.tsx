@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ArrowUp } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 /**
  * Page where users start a new project by entering a prompt.
@@ -34,7 +36,7 @@ export function NewProjectPage() {
 
         <div className="relative">
           {/* Multiline prompt input */}
-          <textarea
+          <Textarea
             className="w-full h-32 rounded-lg border border-input bg-background p-4 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Describe what you need..."
             value={prompt}
@@ -42,14 +44,14 @@ export function NewProjectPage() {
           />
 
           {/* Submit button */}
-          <button
+          <Button
             className="absolute bottom-3 right-3 inline-flex items-center justify-center p-2 bg-primary rounded-full text-white shadow-lg hover:bg-primary/90 disabled:opacity-50"
             onClick={handleCreateProject}
             disabled={!prompt.trim() || isSubmitting}
           >
             <ArrowUp className="h-5 w-5" />
-          </button>
-        </div> 
+          </Button>
+        </div>
       </div>
     </div>
   );
