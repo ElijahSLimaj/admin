@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { getUserSubscription, getSubscriptionPlans, updateSubscription, getTopUpPackages, purchaseTopUp } from "@/api/subscription";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Plan, PlanCard } from "@/components/ui/plan-card";
 
 export function SubscriptionPage() {
   const [subscription, setSubscription] = useState<any>(null);
@@ -29,9 +30,14 @@ export function SubscriptionPage() {
     expiry: "",
     cvc: ""
   });
+
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+const [planToChange, setPlanToChange] = useState<Plan | null>(null);
+const [confirmPlanChangeOpen, setConfirmPlanChangeOpen] = useState(false);
+  
   // Add state for confirmation dialog
-  const [confirmPlanChangeOpen, setConfirmPlanChangeOpen] = useState(false);
-  const [planToChange, setPlanToChange] = useState<any>(null);
+  // const [confirmPlanChangeOpen, setConfirmPlanChangeOpen] = useState(false);
+  // const [planToChange, setPlanToChange] = useState<any>(null);
 
   const { toast } = useToast();
 
@@ -234,115 +240,41 @@ export function SubscriptionPage() {
 
       {/* Change Plan Dialog */}
       <Dialog open={changePlanOpen} onOpenChange={setChangePlanOpen}>
-        <DialogContent className="sm:max-w-3xl">
-          <DialogHeader className="relative">
-            <DialogTitle>Change Subscription Plan</DialogTitle>
-            <DialogDescription>
-              Select a new plan. Your billing cycle will update immediately.
-            </DialogDescription>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 top-0"
-              onClick={() => setChangePlanOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {plans.map((plan) => {
-                const isCurrentPlan = plan.name.toLowerCase() === subscription.plan.toLowerCase();
-                const isEnterprisePlan = plan.isEnterprise;
-                const isFreePlan = plan.price === 0;
-                const buttonLabel = isCurrentPlan
-                  ? "Current Plan"
-                  : isFreePlan && subscription.amount > 0
-                    ? "Downgrade to Free"
-                    : `Upgrade to ${plan.name}`;
+  <DialogContent className="sm:max-w-5xl max-h-screen my-6 overflow-y-auto p-6">
+    <DialogHeader className="relative">
+      <DialogTitle>Change Subscription Plan</DialogTitle>
+      {/* …close button, description, etc.… */}
+    </DialogHeader>
 
-                return (
-                  <div
-                    key={plan.id}
-                    className={`rounded-lg border p-4 flex flex-col h-full ${selectedPlan === plan.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border"
-                      } ${isEnterprisePlan ? "border-dashed" : ""}`}
-                    onClick={() => !isEnterprisePlan && setSelectedPlan(plan.id)}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-lg font-semibold">{plan.name}</span>
-                      <span className="font-bold">
-                        {plan.price === 0 ? (
-                          "Free"
-                        ) : plan.price === null ? (
-                          "Custom"
-                        ) : (
-                          <>
-                            {formatCurrency(plan.price, plan.currency)}
-                            <span className="text-sm font-normal text-muted-foreground">
-                              /month
-                            </span>
-                          </>
-                        )}
-                      </span>
-                    </div>
+    <div className="py-4">
+    {/* …inside your Change Plan DialogContent… */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+  {plans.map((plan) => {
+    const isCurrent = plan.name.toLowerCase() === subscription.plan.toLowerCase();
+    const isSelected = plan.id === selectedPlanId;
 
-                    {plan.tokens !== null && (
-                      <div className="text-sm text-muted-foreground mb-4">
-                        {plan.tokens === 0 ? "No tokens included" : `${formatTokens(plan.tokens)} tokens included`}
-                      </div>
-                    )}
+    return (
+      <PlanCard
+        key={plan.id}
+        plan={plan}
+        isCurrent={isCurrent}
+        isSelected={isSelected}
+        // Only selects the card (blue border)
+        onCardClick={() => setSelectedPlanId(plan.id)}
+        // Only opens confirmation when the button inside is clicked
+        onActionClick={() => {
+          setPlanToChange(plan);
+          setConfirmPlanChangeOpen(true);
+        }}
+        onContactForEnterprise={handleContactForEnterprise}
+      />
+    );
+  })}
+</div>
+  </div>
 
-                    <div className="flex-grow space-y-2 mb-6">
-                      {plan.features.map((feature, index) => (
-                        <div key={index} className="flex items-start gap-2">
-                          <Check className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
-                          <span className="text-sm">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-auto">
-                      {isEnterprisePlan ? (
-                        <Button
-                          className="w-full"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleContactForEnterprise();
-                          }}
-                        >
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Get in Touch
-                        </Button>
-                      ) : isCurrentPlan ? (
-                        <Button
-                          className="w-full"
-                          variant="secondary"
-                          disabled
-                        >
-                          Current Plan
-                        </Button>
-                      ) : (
-                        <Button
-                          className="w-full"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleInitiatePlanChange(plan);
-                          }}
-                        >
-                          {buttonLabel}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+  </DialogContent>
+</Dialog>
 
       {/* Plan Change Confirmation Dialog */}
       <AlertDialog open={confirmPlanChangeOpen} onOpenChange={setConfirmPlanChangeOpen}>
