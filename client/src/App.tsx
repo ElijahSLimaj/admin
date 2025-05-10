@@ -14,6 +14,7 @@ import { DomainsPage } from "./pages/DomainsPage"
 import { SettingsPage } from "./pages/SettingsPage"
 import { ProjectsPage } from "./pages/ProjectsPage"
 import { TeamPage } from "./pages/TeamPage"
+import { NewProjectPage } from "./pages/NewProjectPage"
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                 <Route index element={<Navigate to="/projects/drafts" replace />} />
                 <Route path="drafts" element={<ProjectsPage type="drafts" />} />
                 <Route path="deployed" element={<ProjectsPage type="deployed" />} />
+                <Route path="new" element={<NewProjectPage />} />
               </Route>
               <Route path="team" element={<TeamPage />} />
             </Route>

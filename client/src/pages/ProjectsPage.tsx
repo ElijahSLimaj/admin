@@ -103,7 +103,7 @@ export function ProjectsPage({ type = 'drafts' }: ProjectsPageProps) {
   };
 
   const handleNewProject = () => {
-    window.open('/editor/new', '_blank');
+    navigate("/projects/new");
   };
 
   const handleRename = async () => {
